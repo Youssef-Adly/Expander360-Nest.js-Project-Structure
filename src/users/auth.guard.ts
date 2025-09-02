@@ -1,4 +1,9 @@
-import { Injectable, CanActivate, ExecutionContext, UnauthorizedException } from '@nestjs/common';
+import {
+  Injectable,
+  CanActivate,
+  ExecutionContext,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UsersService } from './users.service';
 
@@ -6,8 +11,8 @@ import { UsersService } from './users.service';
 export class AuthGuard implements CanActivate {
   constructor(
     private jwtService: JwtService,
-    private usersService: UsersService
-  ) { }
+    private usersService: UsersService,
+  ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     try {
@@ -28,9 +33,14 @@ export class AuthGuard implements CanActivate {
       const payload = this.jwtService.verify(token);
 
       // Check if user exists in database
-      const user = await this.usersService.findUserByEmailSafe(payload.contact_email);
+      const user = await this.usersService.findUserByEmailSafe(
+        payload.contact_email,
+      );
+      console.log('user: ', user);
       if (!user) {
-        throw new UnauthorizedException('User not found or account has been deleted');
+        throw new UnauthorizedException(
+          'User not found or account has been deleted',
+        );
       }
 
       // Add user information to request object for use in controllers
@@ -39,7 +49,7 @@ export class AuthGuard implements CanActivate {
         contact_email: user.contact_email,
         company_name: user.company_name,
         IsAdmin: user.IsAdmin,
-        role: user.IsAdmin ? 'admin' : 'client'
+        role: user.IsAdmin ? 'admin' : 'client',
       };
 
       return true;
