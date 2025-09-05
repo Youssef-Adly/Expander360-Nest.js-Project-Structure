@@ -1,8 +1,9 @@
 import { HttpException, HttpStatus, Injectable, Logger, NotFoundException, ConflictException, BadRequestException } from '@nestjs/common';
+import { Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
-import { DataSource, Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { LoginUserDto } from './dto/login-user.dto';
 import type { Response } from 'express';
@@ -10,16 +11,13 @@ import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class UsersService {
-  private readonly userRepository: Repository<User>;
   private readonly logger = new Logger(UsersService.name);
 
   constructor(
-    private readonly dataSource: DataSource,
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
     private readonly jwtService: JwtService
-  ) {
-    // get users table repository to interact with the database
-    this.userRepository = this.dataSource.getRepository(User);
-  }
+  ) { }
 
   async create(createUserDto: CreateUserDto) {
     try {

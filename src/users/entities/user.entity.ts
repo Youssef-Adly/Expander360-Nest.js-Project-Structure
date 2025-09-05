@@ -1,4 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
+import { Project } from '../../projects/entities/project.entity';
 
 @Entity('users')
 export class User {
@@ -16,4 +17,8 @@ export class User {
 
   @Column({ type: 'boolean', default: false })
   IsAdmin: boolean;
+
+  // Relations
+  @OneToMany(() => Project, project => project.user)
+  projects: Project[];
 }

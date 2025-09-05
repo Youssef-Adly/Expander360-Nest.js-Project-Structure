@@ -12,7 +12,7 @@ export class AuthGuard implements CanActivate {
   constructor(
     private jwtService: JwtService,
     private usersService: UsersService,
-  ) {}
+  ) { }
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     try {
@@ -36,7 +36,7 @@ export class AuthGuard implements CanActivate {
       const user = await this.usersService.findUserByEmailSafe(
         payload.contact_email,
       );
-      console.log('user: ', user);
+
       if (!user) {
         throw new UnauthorizedException(
           'User not found or account has been deleted',
