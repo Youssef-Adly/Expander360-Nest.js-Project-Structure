@@ -14,6 +14,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 // import { RolesGuard } from './users/roles.guard';
 // import { AuthGuard } from './users/auth.guard';
 import { ReportsModule } from './reports/reports.module';
+import { AnalyticsModule } from './analytics/analytics.module';
 
 @Module({
   imports: [
@@ -29,7 +30,8 @@ import { ReportsModule } from './reports/reports.module';
       global: true
     }),
     MongooseModule.forRoot(`mongodb://localhost:27017/Expander360`),
-    ReportsModule
+    ReportsModule,
+    AnalyticsModule
   ],
   controllers: [AppController],
   providers: [
