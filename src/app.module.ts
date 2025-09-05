@@ -15,6 +15,8 @@ import { MongooseModule } from '@nestjs/mongoose';
 // import { AuthGuard } from './users/auth.guard';
 import { ReportsModule } from './reports/reports.module';
 import { AnalyticsModule } from './analytics/analytics.module';
+import { NotificationsModule } from './notifications/notifications.module';
+import { TasksModule } from './tasks/tasks.module';
 
 @Module({
   imports: [
@@ -31,7 +33,9 @@ import { AnalyticsModule } from './analytics/analytics.module';
     }),
     MongooseModule.forRoot(`mongodb://localhost:27017/Expander360`),
     ReportsModule,
-    AnalyticsModule
+    AnalyticsModule,
+    NotificationsModule,
+    TasksModule,
   ],
   controllers: [AppController],
   providers: [

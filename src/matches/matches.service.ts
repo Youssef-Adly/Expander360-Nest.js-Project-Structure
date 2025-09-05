@@ -6,6 +6,7 @@ import { CreateMatchDto } from './dto/create-match.dto';
 import { UpdateMatchDto } from './dto/update-match.dto';
 import { Project } from '../projects/entities/project.entity';
 import { Vendor } from '../vendors/entities/vendor.entity';
+import { EmailService } from '../notifications/services/email.service';
 
 @Injectable()
 export class MatchesService {
@@ -17,7 +18,8 @@ export class MatchesService {
     @InjectRepository(Project)
     private projectRepository: Repository<Project>,
     @InjectRepository(Vendor)
-    private vendorRepository: Repository<Vendor>
+    private vendorRepository: Repository<Vendor>,
+    private readonly emailService: EmailService,
   ) { }
 
   async create(createMatchDto: CreateMatchDto) {
@@ -39,6 +41,15 @@ export class MatchesService {
       const savedMatch = await this.matchRepository.save(match);
 
       this.logger.log(`Match created successfully with ID: ${savedMatch.id}`);
+      // Notify project owner by email (mock)
+      const projectWithUser = await this.projectRepository.findOne({ where: { id: project.id }, relations: ['user'] });
+      if (projectWithUser?.user?.contact_email) {
+        await this.emailService.sendEmail({
+          to: projectWithUser.user.contact_email,
+          subject: 'New vendor match created',
+          text: `A new match has been created for your project ${projectWithUser.id} with vendor ${vendor.name}.`,
+        });
+      }
       return { message: "Match created successfully", match: savedMatch };
     } catch (error) {
       this.logger.error(`Failed to create match: ${error.message}`, error.stack);

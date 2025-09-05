@@ -27,6 +27,12 @@ export class Vendor {
   @Column({ type: 'int', default: 24 })
   response_sla_hours: number;
 
+  @Column({ type: 'datetime', nullable: true })
+  sla_expires_at: Date | null;
+
+  @Column({ type: 'boolean', default: false })
+  sla_expired: boolean;
+
   @CreateDateColumn()
   created_at: Date;
 
