@@ -13,7 +13,7 @@ export class ProjectsService {
     private projectRepository: Repository<Project>,
     @InjectRepository(User)
     private userRepository: Repository<User>,
-  ) {}
+  ) { }
 
   async create(createProjectDto: CreateProjectDto) {
     const user = await this.userRepository.findOne({
@@ -36,7 +36,7 @@ export class ProjectsService {
 
   async findAll() {
     const projects = await this.projectRepository.find({
-      relations: ['user', 'matches'],
+      relations: ['user', 'matches', 'matches.vendor'],
     });
     return { message: 'Projects fetched successfully', projects };
   }

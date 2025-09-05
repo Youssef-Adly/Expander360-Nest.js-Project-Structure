@@ -26,17 +26,17 @@ import { AuthGuard } from './auth.guard';
 import { CurrentUser } from './current-user.decorator';
 import { User } from './entities/user.entity';
 
-// @UseGuards(AuthGuard, RolesGuard)
+@UseGuards(AuthGuard, RolesGuard)
 @Controller('users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(private readonly usersService: UsersService) { }
 
   @UseGuards(AuthGuard)
   @UserRoles(Role.Admin)
   @UsePipes(new ValidationPipe(/* { stopAtFirstError: true } */))
   @Post()
   create(@CurrentUser() user: User, @Body() createUserDto: CreateUserDto) {
-    console.log('data: ', user);
+    // console.log('data: ', user);
     return this.usersService.create(createUserDto);
   }
 
