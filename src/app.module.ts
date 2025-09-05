@@ -8,10 +8,12 @@ import { ProjectsModule } from './projects/projects.module';
 import { VendorsModule } from './vendors/vendors.module';
 import { MatchesModule } from './matches/matches.module';
 import { JwtModule } from '@nestjs/jwt';
+import { MongooseModule } from '@nestjs/mongoose';
 // import { UsersService } from './users/users.service';
 // import { APP_GUARD } from '@nestjs/core';
 // import { RolesGuard } from './users/roles.guard';
 // import { AuthGuard } from './users/auth.guard';
+import { ReportsModule } from './reports/reports.module';
 
 @Module({
   imports: [
@@ -26,6 +28,8 @@ import { JwtModule } from '@nestjs/jwt';
       signOptions: { expiresIn: '7d' },
       global: true
     }),
+    MongooseModule.forRoot(`mongodb://localhost:27017/Expander360`),
+    ReportsModule
   ],
   controllers: [AppController],
   providers: [
