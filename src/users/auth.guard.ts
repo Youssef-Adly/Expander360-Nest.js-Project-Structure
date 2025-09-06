@@ -28,17 +28,14 @@ export class AuthGuard implements CanActivate {
       if (!token) {
         throw new UnauthorizedException('Token is missing');
       }
-      console.log("token: ", token)
 
       // Verify and decode the JWT token
       const payload = this.jwtService.verify(token);
-      console.log("payload: ", payload)
 
       // Check if user exists in database
       const user = await this.usersService.findUserByEmailSafe(
         payload.contact_email,
       );
-      console.log("user: ", user)
 
       if (!user) {
         throw new UnauthorizedException(

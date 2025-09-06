@@ -63,6 +63,8 @@ export class UsersService {
   // Find all users with pagination and filtering
   async findAll(limit?: number, page?: number, isAdmin?: boolean) {
     try {
+      console.log("isAdmin: ", isAdmin)
+      console.log("isAdmin: ", typeof isAdmin)
       // Validate and sanitize input parameters
       const validatedLimit = Math.min(Math.max(limit || 10, 1), 100); // Between 1 and 100
       const validatedPage = Math.max(page || 1, 1); // Minimum 1
@@ -70,7 +72,6 @@ export class UsersService {
       this.logger.log(`Fetching users - Page: ${validatedPage}, Limit: ${validatedLimit}, Admin filter: ${isAdmin}`);
 
       const [users, total] = await this.userRepository.findAndCount({
-        select: ['id', 'company_name', 'contact_email', 'IsAdmin'], // Exclude password
         skip: (validatedPage - 1) * validatedLimit,
         take: validatedLimit,
         where: {
@@ -110,7 +111,6 @@ export class UsersService {
       this.logger.log(`Fetching user with ID: ${id}`);
 
       const user = await this.userRepository.findOne({
-        select: ['id', 'company_name', 'contact_email', 'IsAdmin'], // Exclude password
         where: { id }
       });
 

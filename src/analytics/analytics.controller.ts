@@ -19,14 +19,14 @@ export class AnalyticsController {
   constructor(private readonly analyticsService: AnalyticsService) { }
 
   @UserRoles(Role.Admin)
-  @UsePipes(new ValidationPipe())
+  @UsePipes(new ValidationPipe({ transform: true, whitelist: true }))
   @Get('top-vendors')
   getTopVendorsPerCountry() {
     return this.analyticsService.getTopVendorsPerCountry();
   }
 
   @UserRoles(Role.Admin, Role.Client)
-  @UsePipes(new ValidationPipe())
+  @UsePipes(new ValidationPipe({ transform: true, whitelist: true }))
   @Get('vendor/:vendorId/performance')
   getVendorPerformanceMetrics(@Param('vendorId', ParseIntPipe) vendorId: number) {
     return this.analyticsService.getVendorPerformanceMetrics(vendorId);

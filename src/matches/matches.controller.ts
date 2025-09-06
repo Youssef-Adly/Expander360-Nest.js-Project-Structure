@@ -9,10 +9,13 @@ import {
   ParseIntPipe,
   UseGuards,
   Query,
+  UsePipes,
+  ValidationPipe,
 } from '@nestjs/common';
 import { MatchesService } from './matches.service';
 import { CreateMatchDto } from './dto/create-match.dto';
 import { UpdateMatchDto } from './dto/update-match.dto';
+import { QueryMatchDto } from './dto/query-match.dto';
 import { AuthGuard } from '../users/auth.guard';
 import { RolesGuard } from '../users/roles.guard';
 import { UserRoles } from '../users/roles.decorator';
@@ -32,20 +35,17 @@ export class MatchesController {
 
   // Both clients and admins can view matches
   @UserRoles(Role.Client, Role.Admin)
+  @UsePipes(new ValidationPipe({ transform: true, whitelist: true }))
   @Get()
-  findAll(
-    @Query('project_id') projectId?: number,
-    @Query('vendor_id') vendorId?: number,
-    @Query('top') top?: number,
-  ) {
-    if (projectId) {
-      return this.matchesService.findByProject(projectId);
+  findAll(@Query() queryMatchDto: QueryMatchDto) {
+    if (queryMatchDto.project_id) {
+      return this.matchesService.findByProject(queryMatchDto.project_id);
     }
-    if (vendorId) {
-      return this.matchesService.findByVendor(vendorId);
+    if (queryMatchDto.vendor_id) {
+      return this.matchesService.findByVendor(queryMatchDto.vendor_id);
     }
-    if (top) {
-      return this.matchesService.findTopMatches(top);
+    if (queryMatchDto.top) {
+      return this.matchesService.findTopMatches(queryMatchDto.top);
     }
     return this.matchesService.findAll();
   }

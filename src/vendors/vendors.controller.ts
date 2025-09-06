@@ -25,7 +25,7 @@ import { ServiceType } from '../common/enums/service-type.enum';
 
 @Controller('vendors')
 @UseGuards(AuthGuard, RolesGuard)
-@UsePipes(new ValidationPipe())
+@UsePipes(new ValidationPipe({ transform: true, whitelist: true }))
 export class VendorsController {
   constructor(private readonly vendorsService: VendorsService) { }
 

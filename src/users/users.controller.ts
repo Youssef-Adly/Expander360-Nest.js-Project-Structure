@@ -32,20 +32,20 @@ export class UsersController {
 
   @UseGuards(AuthGuard, RolesGuard)
   @UserRoles(Role.Admin)
-  @UsePipes(new ValidationPipe(/* { stopAtFirstError: true } */))
+  @UsePipes(new ValidationPipe({ transform: true, whitelist: true }))
   @Post()
   create(@CurrentUser() user: User, @Body() createUserDto: CreateUserDto) {
     // console.log('data: ', user);
     return this.usersService.create(createUserDto);
   }
 
-  @UsePipes(new ValidationPipe(/* { stopAtFirstError: true } */))
+  @UsePipes(new ValidationPipe({ transform: true, whitelist: true }))
   @Post('register')
   register(@Body() createUserDto: CreateUserDto) {
     return this.usersService.register(createUserDto);
   }
 
-  @UsePipes(new ValidationPipe(/* { stopAtFirstError: true } */))
+  @UsePipes(new ValidationPipe({ transform: true, whitelist: true }))
   @Post('login')
   login(
     @Body() loginUserDto: LoginUserDto,
@@ -57,7 +57,7 @@ export class UsersController {
   @UseGuards(AuthGuard, RolesGuard)
   @UserRoles(Role.Admin)
   @Get()
-  @UsePipes(new ValidationPipe(/* { stopAtFirstError: true } */))
+  @UsePipes(new ValidationPipe({ transform: true, whitelist: true }))
   findAll(@Query() queryUserDto: QueryUserDto) {
     return this.usersService.findAll(
       queryUserDto.limit,
@@ -69,7 +69,7 @@ export class UsersController {
   @UseGuards(AuthGuard, RolesGuard)
   @UserRoles(Role.Admin, Role.Client)
   @Get(':id')
-  @UsePipes(new ValidationPipe(/* { stopAtFirstError: true } */))
+  @UsePipes(new ValidationPipe({ transform: true, whitelist: true }))
   findOne(@Param() paramUserDto: ParamUserDto, @CurrentUser() user: any) {
     // Clients can only view their own profile, admins can view any profile
     if (user.role === 'client' && user.id !== paramUserDto.id) {
@@ -80,7 +80,7 @@ export class UsersController {
 
   @UseGuards(AuthGuard, RolesGuard)
   @UserRoles(Role.Admin, Role.Client)
-  @UsePipes(new ValidationPipe(/* { stopAtFirstError: true } */))
+  @UsePipes(new ValidationPipe({ transform: true, whitelist: true }))
   @Patch(':id')
   update(
     @Param() paramUserDto: ParamUserDto,
@@ -97,7 +97,7 @@ export class UsersController {
   @UseGuards(AuthGuard, RolesGuard)
   @UserRoles(Role.Admin)
   @Delete(':id')
-  @UsePipes(new ValidationPipe(/* { stopAtFirstError: true } */))
+  @UsePipes(new ValidationPipe({ transform: true, whitelist: true }))
   remove(@Param() paramUserDto: ParamUserDto) {
     return this.usersService.remove(paramUserDto.id);
   }

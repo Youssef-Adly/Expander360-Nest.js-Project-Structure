@@ -1,5 +1,6 @@
-import { IsOptional, IsInt, IsBoolean, Min, Max } from 'class-validator';
-import { Type } from 'class-transformer';
+import { IsOptional, IsInt, Min, Max } from 'class-validator';
+import { Transform, Type } from 'class-transformer';
+import { IsBooleanString } from '../../Validators/IsBooleanString';
 
 export class QueryUserDto {
   @IsOptional()
@@ -16,7 +17,11 @@ export class QueryUserDto {
   page?: number = 1;
 
   @IsOptional()
-  @Type(() => Boolean)
-  @IsBoolean({ message: 'isAdmin must be a boolean value' })
+  @IsBooleanString({ message: 'isAdmin must be "true" or "false"' })
+  @Transform(({ value }) => {
+    if (value === 'true') return true;
+    if (value === 'false') return false;
+    return value;
+  })
   isAdmin?: boolean;
 }

@@ -25,28 +25,28 @@ export class ReportsController {
   constructor(private readonly reportsService: ReportsService) { }
 
   @UserRoles(Role.Client, Role.Admin)
-  @UsePipes(new ValidationPipe())
+  @UsePipes(new ValidationPipe({ transform: true, whitelist: true }))
   @Post()
   create(@Body() createReportDto: CreateReportDto) {
     return this.reportsService.create(createReportDto);
   }
 
   @UserRoles(Role.Client, Role.Admin)
-  @UsePipes(new ValidationPipe())
+  @UsePipes(new ValidationPipe({ transform: true, whitelist: true }))
   @Get()
   findAll() {
     return this.reportsService.findAll();
   }
 
   @UserRoles(Role.Client, Role.Admin)
-  @UsePipes(new ValidationPipe())
+  @UsePipes(new ValidationPipe({ transform: true, whitelist: true }))
   @Get('stats')
   getStats() {
     return this.reportsService.getReportStats();
   }
 
   @UserRoles(Role.Client, Role.Admin)
-  @UsePipes(new ValidationPipe())
+  @UsePipes(new ValidationPipe({ transform: true, whitelist: true }))
   @Get('search')
   search(
     @Query('projectId') projectId?: string,
@@ -69,21 +69,21 @@ export class ReportsController {
   }
 
   @UserRoles(Role.Client, Role.Admin)
-  @UsePipes(new ValidationPipe())
+  @UsePipes(new ValidationPipe({ transform: true, whitelist: true }))
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.reportsService.findOne(id);
   }
 
   @UserRoles(Role.Client, Role.Admin)
-  @UsePipes(new ValidationPipe())
+  @UsePipes(new ValidationPipe({ transform: true, whitelist: true }))
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateReportDto: UpdateReportDto) {
     return this.reportsService.update(id, updateReportDto);
   }
 
   @UserRoles(Role.Client, Role.Admin)
-  @UsePipes(new ValidationPipe())
+  @UsePipes(new ValidationPipe({ transform: true, whitelist: true }))
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.reportsService.remove(id);
