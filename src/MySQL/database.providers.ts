@@ -1,7 +1,10 @@
 
+import { Logger } from '@nestjs/common';
 import { DataSource } from 'typeorm';
 // import * as dotenv from 'dotenv';
 // dotenv.config();
+
+const logger = new Logger("DatabaseModule")
 
 export const databaseProviders = [
   {
@@ -23,9 +26,10 @@ export const databaseProviders = [
         // Create database if it doesn't exist
         try {
           await tempDataSource.query(`CREATE DATABASE IF NOT EXISTS \`expander360\``);
-          console.log('Database created or already exists');
+          logger.log("Database created or already exists");
         } catch (err) {
           console.error('Error creating database:', err);
+          logger.error('Error creating database:', err);
           throw err;
         }
 
@@ -41,9 +45,17 @@ export const databaseProviders = [
           password: process.env.DB_PASSWORD || 'admin',
           database: process.env.DB_NAME || 'expander360',
           entities: [
-              __dirname + '/../**/*.entity{.ts,.js}',
+            __dirname + '/../**/*.entity{.ts,.js}',
           ],
           synchronize: true,
+          ssl: true
+            ? {
+              rejectUnauthorized: false, // required for Aiven/MySQL managed clouds
+              ca: process.env.DB_SSL_CA?.replace(/\\n/g, '\n'),
+              // key: process.env.DB_SSL_KEY?.replace(/\\n/g, '\n'),
+              // cert: process.env.DB_SSL_CERT?.replace(/\\n/g, '\n'),
+            }
+            : undefined,
         });
 
         await dataSource.initialize();
