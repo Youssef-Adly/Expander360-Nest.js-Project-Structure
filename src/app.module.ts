@@ -9,14 +9,14 @@ import { VendorsModule } from './vendors/vendors.module';
 import { MatchesModule } from './matches/matches.module';
 import { JwtModule } from '@nestjs/jwt';
 import { MongooseModule } from '@nestjs/mongoose';
-// import { UsersService } from './users/users.service';
-// import { APP_GUARD } from '@nestjs/core';
-// import { RolesGuard } from './users/roles.guard';
-// import { AuthGuard } from './users/auth.guard';
 import { ReportsModule } from './reports/reports.module';
 import { AnalyticsModule } from './analytics/analytics.module';
 import { NotificationsModule } from './notifications/notifications.module';
 import { TasksModule } from './tasks/tasks.module';
+// import { UsersService } from './users/users.service';
+// import { APP_GUARD } from '@nestjs/core';
+// import { RolesGuard } from './users/roles.guard';
+// import { AuthGuard } from './users/auth.guard';
 
 @Module({
   imports: [
@@ -27,11 +27,11 @@ import { TasksModule } from './tasks/tasks.module';
     VendorsModule,
     MatchesModule,
     JwtModule.register({
-      secret: 'secret',
-      signOptions: { expiresIn: '7d' },
+      secret: process.env.JWT_SECRET,
+      signOptions: { expiresIn: process.env.JWT_EXPIRES_IN },
       global: true
     }),
-    MongooseModule.forRoot(`mongodb://localhost:27017/Expander360`),
+    MongooseModule.forRoot(`mongodb://localhost:27017/${process.env.MONGODB_DATABASE}`),
     ReportsModule,
     AnalyticsModule,
     NotificationsModule,

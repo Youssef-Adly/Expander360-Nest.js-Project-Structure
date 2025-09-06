@@ -241,7 +241,7 @@ export class UsersService {
           IsAdmin: userWithoutPassword.IsAdmin,
           role: userWithoutPassword.IsAdmin ? 'admin' : 'client'
         },
-        { secret: "secret" }
+        { secret: process.env.JWT_SECRET }
       );
 
       return {
@@ -284,7 +284,7 @@ export class UsersService {
           IsAdmin: foundUser.IsAdmin,
           role: foundUser.IsAdmin ? 'admin' : 'client'
         },
-        { secret: "secret" }
+        { secret: process.env.JWT_SECRET }
       );
 
       // Set token in header

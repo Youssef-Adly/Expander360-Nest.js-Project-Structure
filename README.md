@@ -6,7 +6,7 @@ A comprehensive NestJS-based platform that intelligently matches projects with v
 
 ### Prerequisites
 
-- Nest.js (v18+ recommended)
+- Nest.js (v11+ recommended)
 - MySQL (v8.0+)
 - MongoDB (v6.0+)
 - npm or yarn
