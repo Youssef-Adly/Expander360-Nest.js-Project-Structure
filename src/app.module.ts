@@ -31,7 +31,7 @@ import { TasksModule } from './tasks/tasks.module';
       signOptions: { expiresIn: process.env.JWT_EXPIRES_IN },
       global: true
     }),
-    MongooseModule.forRoot(`mongodb://localhost:27017/${process.env.MONGODB_DATABASE}`),
+    MongooseModule.forRoot(`${process.env.MONGODB_URI}/${process.env.MONGODB_DATABASE}`),
     ReportsModule,
     AnalyticsModule,
     NotificationsModule,
