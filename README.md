@@ -1,99 +1,490 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# Expander360 - Project-Vendor Matching Platform
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+A comprehensive NestJS-based platform that intelligently matches projects with vendors based on geographical location, service requirements, vendor ratings, and response SLA.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## 🚀 Quick Start
 
-## Description
+### Prerequisites
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+- Nest.js (v18+ recommended)
+- MySQL (v8.0+)
+- MongoDB (v6.0+)
+- npm or yarn
 
-## Project setup
+### Installation
 
 ```bash
-$ npm install
+# Clone the repository
+git clone <repository-url>
+cd expander360
+
+# Install dependencies
+npm install
+
+# Set up environment variables
+cp .env.example .env
+# Edit .env with your database credentials
 ```
 
-## Compile and run the project
+### Environment Variables
+
+Create a `.env` file in the root directory:
+
+```env
+# MySQL Database
+DB_HOST=localhost
+DB_PORT=3306
+DB_USERNAME=root
+DB_PASSWORD=admin
+DB_NAME=expander360
+
+# MongoDB
+MONGODB_URI=mongodb://localhost:27017
+MONGODB_DATABASE=expander360_analytics
+
+# JWT
+JWT_SECRET=your-super-secret-jwt-key
+JWT_EXPIRES_IN=24h
+
+# Application
+PORT=3000
+NEST_ENV=development
+```
+
+### Database Setup
+
+1. **Run Migrations**:
 
 ```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+npm run migration:run
 ```
 
-## Run tests
+2. **Seed Database with Test Data**:
 
 ```bash
-# unit tests
-$ npm run test
+# Seed both MySQL and MongoDB
+npm run seed
 
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+# Or seed individually
+npm run seed:mysql
+npm run seed:mongodb
 ```
 
-## Deployment
-
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+3. **Start the Application**:
 
 ```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
+# Development mode
+npm run start:dev
+
+# Production mode
+npm run start:prod
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+## 📊 Database Schema
 
-## Resources
+### MySQL Schema (Relational Data)
 
-Check out a few resources that may come in handy when working with NestJS:
+```mermaid
+erDiagram
+    users {
+        int id PK
+        varchar company_name
+        varchar contact_email
+        varchar password
+        boolean IsAdmin
+        datetime created_at
+        datetime updated_at
+    }
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+    projects {
+        int id PK
+        int user_id FK
+        varchar country
+        json services_needed
+        decimal budget
+        enum status
+        datetime created_at
+        datetime updated_at
+    }
 
-## Support
+    vendors {
+        int id PK
+        varchar name
+        json countries_supported
+        json services_offered
+        decimal rating
+        int response_sla_hours
+        datetime sla_expires_at
+        boolean sla_expired
+        datetime created_at
+        datetime updated_at
+    }
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+    matches {
+        int id PK
+        int project_id FK
+        int vendor_id FK
+        decimal score
+        datetime created_at
+    }
 
-## Stay in touch
+    users ||--o{ projects : "has"
+    projects ||--o{ matches : "matched_to"
+    vendors ||--o{ matches : "matched_with"
+```
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+### MongoDB Schema (Analytics & Reports)
 
-## License
+**Analytics Collection**:
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
-# Expander360-Nest.js-Project-Structure
+```javascript
+{
+  timestamp: Date,
+  event_type: String, // 'user_registration', 'project_created', 'match_generated', etc.
+  user_id: Number,
+  project_id: Number,
+  vendor_id: Number,
+  match_id: Number,
+  metadata: {
+    ip_address: String,
+    user_agent: String,
+    session_id: String,
+    // Additional event-specific data
+  }
+}
+```
+
+**Reports Collection**:
+
+```javascript
+{
+  report_id: String,
+  title: String,
+  type: String, // 'project_performance', 'vendor_analytics', etc.
+  generated_at: Date,
+  generated_by: Number,
+  data: Object, // Report-specific data structure
+  filters: Object // Applied filters for the report
+}
+```
+
+## 🔗 API Endpoints
+
+### Authentication
+
+All endpoints (except registration/login) require JWT authentication:
+
+```
+Authorization: Bearer <jwt_token>
+```
+
+### Users API
+
+| Method | Endpoint          | Description       | Access      |
+| ------ | ----------------- | ----------------- | ----------- |
+| POST   | `/users/register` | Register new user | Public      |
+| POST   | `/users/login`    | User login        | Public      |
+| GET    | `/users`          | Get all users     | Admin       |
+| GET    | `/users/:id`      | Get user by ID    | Admin/Owner |
+| PATCH  | `/users/:id`      | Update user       | Admin/Owner |
+| DELETE | `/users/:id`      | Delete user       | Admin       |
+
+### Projects API
+
+| Method | Endpoint              | Description              | Access       |
+| ------ | --------------------- | ------------------------ | ------------ |
+| GET    | `/projects`           | Get all projects         | Client/Admin |
+| GET    | `/projects?user_id=1` | Get projects by user     | Client/Admin |
+| POST   | `/projects`           | Create project           | Client/Admin |
+| GET    | `/projects/:id`       | Get project with matches | Client/Admin |
+| PATCH  | `/projects/:id`       | Update project           | Client/Admin |
+| DELETE | `/projects/:id`       | Delete project           | Client/Admin |
+
+### Vendors API
+
+| Method | Endpoint          | Description                | Access       |
+| ------ | ----------------- | -------------------------- | ------------ |
+| GET    | `/vendors`        | Get all vendors            | Client/Admin |
+| GET    | `/vendors/search` | Search vendors by criteria | Client/Admin |
+| POST   | `/vendors`        | Create vendor              | Admin        |
+| GET    | `/vendors/:id`    | Get vendor by ID           | Client/Admin |
+| PATCH  | `/vendors/:id`    | Update vendor              | Admin        |
+| DELETE | `/vendors/:id`    | Delete vendor              | Admin        |
+
+### Matches API
+
+| Method | Endpoint                | Description            | Access       |
+| ------ | ----------------------- | ---------------------- | ------------ |
+| GET    | `/matches`              | Get all matches        | Client/Admin |
+| GET    | `/matches?project_id=1` | Get matches by project | Client/Admin |
+| GET    | `/matches?vendor_id=1`  | Get matches by vendor  | Client/Admin |
+| GET    | `/matches?top=10`       | Get top matches        | Client/Admin |
+| POST   | `/matches`              | Create manual match    | Admin        |
+| GET    | `/matches/:id`          | Get match by ID        | Client/Admin |
+| PATCH  | `/matches/:id`          | Update match           | Admin        |
+| DELETE | `/matches/:id`          | Delete match           | Admin        |
+
+### Analytics API
+
+| Method | Endpoint             | Description           | Access |
+| ------ | -------------------- | --------------------- | ------ |
+| GET    | `/analytics/events`  | Get analytics events  | Admin  |
+| GET    | `/analytics/reports` | Get generated reports | Admin  |
+| POST   | `/analytics/reports` | Generate new report   | Admin  |
+
+## 🎯 Matching Algorithm
+
+The platform uses a sophisticated scoring algorithm to match projects with vendors:
+
+### Scoring Formula
+
+```
+Final Score = (Services Overlap × 2) + Vendor Rating + SLA Weight
+```
+
+### Components
+
+1. **Services Overlap** (0-N points, multiplied by 2):
+   - Counts how many required services the vendor offers
+   - Each matching service adds 1 point (then multiplied by 2)
+
+2. **Vendor Rating** (0-5 points):
+   - Direct addition of vendor's rating (0.00 to 5.00)
+
+3. **SLA Weight** (0-100 points):
+   - Formula: `max(0, 100 - (response_sla_hours × 2))`
+   - Faster response times get higher scores
+   - Example: 2 hours SLA = 96 points, 24 hours SLA = 52 points
+
+### Geographic Filtering
+
+- Only vendors that serve the project's country are considered
+- Country overlap is mandatory (binary filter, not scored)
+
+### Score Range
+
+- Final scores are clamped between 0 and 100
+- Scores above 90 are considered "excellent matches"
+- Scores 70-89 are "good matches"
+- Scores 50-69 are "fair matches"
+- Scores below 50 are "poor matches"
+
+### Example Calculation
+
+**Project Requirements:**
+
+- Country: USA
+- Services: [web_development, ui_ux_design]
+- Budget: $50,000
+
+**Vendor A:**
+
+- Countries: [USA, Canada, UK]
+- Services: [web_development, ui_ux_design, digital_marketing]
+- Rating: 4.8
+- SLA: 12 hours
+
+**Calculation:**
+
+- Services Overlap: 2 (both web_development and ui_ux_design match)
+- Score: (2 × 2) + 4.8 + (100 - 12×2) = 4 + 4.8 + 76 = **84.8**
+
+## 🧪 Testing
+
+### Test Data Overview
+
+The seeding script creates realistic test data including:
+
+**Users (7 total)**:
+
+- 6 client companies (TechCorp, Digital Innovations, etc.)
+- 1 admin user
+
+**Vendors (10 total)**:
+
+- Overlapping country support to test matching logic
+- Various service combinations
+- Different ratings and SLA times
+
+**Projects (12 total)**:
+
+- Distributed across multiple countries
+- Various service requirements and budgets
+- Different project statuses
+
+**Matches (47 total)**:
+
+- Generated using the actual matching algorithm
+- Realistic score distributions
+
+### Country Overlap Testing
+
+The seed data includes strategic overlaps:
+
+- USA: Supported by 8 vendors (most overlap)
+- UK: Supported by 6 vendors
+- Germany: Supported by 5 vendors
+- Multiple vendors support the same country combinations
+
+This ensures robust testing of the matching algorithm with realistic scenarios.
+
+### Running Tests
+
+```bash
+# Unit tests
+npm run test
+
+# E2E tests
+npm run test:e2e
+
+# Test coverage
+npm run test:cov
+```
+
+## 🛠 Development
+
+### Project Structure
+
+```
+src/
+├── analytics/          # Analytics and reporting
+├── common/
+│   └── enums/          # Shared enumerations
+├── database/
+│   └── migrations/     # SQL migration files
+├── matches/            # Project-vendor matching logic
+├── MySQL/              # MySQL database configuration
+├── notifications/      # Email and notification services
+├── projects/           # Project management
+├── reports/            # Report generation
+├── tasks/              # Background tasks
+├── users/              # User management and authentication
+├── vendors/            # Vendor management
+└── Validators/         # Custom validation decorators
+
+scripts/
+├── seed-all.ts         # Complete database seeding
+├── seed-database.ts    # MySQL seeding
+├── seed-mongodb.ts     # MongoDB seeding
+└── run-migrations.ts   # Migration runner
+```
+
+### Code Quality
+
+```bash
+# Linting
+npm run lint
+
+# Code formatting
+npm run format
+```
+
+### Adding New Features
+
+1. Create feature module: `nest g module feature-name`
+2. Add entities, DTOs, controllers, and services
+3. Update database schema if needed
+4. Add tests
+5. Update API documentation
+
+## 🌐 Deployment
+
+### Environment Setup
+
+1. **Production Database**:
+   - Set up MySQL and MongoDB instances
+   - Update environment variables
+   - Run migrations: `npm run migration:run`
+
+2. **Application Deployment**:
+
+```bash
+# Build the application
+npm run build
+
+# Start in production mode
+npm run start:prod
+```
+
+### Docker Deployment (Optional)
+
+```dockerfile
+# Example Dockerfile
+FROM node:18-alpine
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci --only=production
+COPY dist/ ./dist/
+EXPOSE 3000
+CMD ["npm", "run", "start:prod"]
+```
+
+### Health Checks
+
+The application exposes health check endpoints:
+
+- `GET /health` - Application health status
+- `GET /health/database` - Database connectivity status
+
+## 📈 Monitoring & Analytics
+
+### Built-in Analytics
+
+The platform tracks various events:
+
+- User registrations and logins
+- Project creation and updates
+- Vendor interactions
+- Match generation and viewing
+- API calls and performance metrics
+
+### Available Reports
+
+1. **Project Performance**: Success rates, budget analysis, service trends
+2. **Vendor Analytics**: Top performers, response times, service coverage
+3. **Matching Efficiency**: Score distributions, algorithm performance
+4. **User Activity**: Engagement metrics, geographic distribution
+
+### Custom Reports
+
+Generate custom reports via the Analytics API:
+
+```bash
+POST /analytics/reports
+{
+  "type": "custom",
+  "title": "Monthly Performance Report",
+  "filters": {
+    "date_range": "2024-01-01 to 2024-01-31",
+    "countries": ["USA", "UK"],
+    "min_budget": 50000
+  }
+}
+```
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch: `git checkout -b feature-name`
+3. Make your changes and add tests
+4. Ensure all tests pass: `npm run test`
+5. Commit your changes: `git commit -am 'Add new feature'`
+6. Push to the branch: `git push origin feature-name`
+7. Create a Pull Request
+
+## 📝 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🆘 Support
+
+For support and questions:
+
+- Create an issue in the GitHub repository
+- Contact the development team at dev@expander360.com
+
+---
+
+**Live Demo**: [https://expander360.herokuapp.com](https://expander360.herokuapp.com) _(Replace with actual deployment URL)_
+
+_Last updated: December 2024_

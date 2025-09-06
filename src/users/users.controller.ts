@@ -26,12 +26,11 @@ import { AuthGuard } from './auth.guard';
 import { CurrentUser } from './current-user.decorator';
 import { User } from './entities/user.entity';
 
-@UseGuards(AuthGuard, RolesGuard)
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) { }
 
-  @UseGuards(AuthGuard)
+  @UseGuards(AuthGuard, RolesGuard)
   @UserRoles(Role.Admin)
   @UsePipes(new ValidationPipe(/* { stopAtFirstError: true } */))
   @Post()
@@ -67,7 +66,7 @@ export class UsersController {
     );
   }
 
-  @UseGuards(AuthGuard)
+  @UseGuards(AuthGuard, RolesGuard)
   @UserRoles(Role.Admin, Role.Client)
   @Get(':id')
   @UsePipes(new ValidationPipe(/* { stopAtFirstError: true } */))
@@ -79,7 +78,7 @@ export class UsersController {
     return this.usersService.findOne(paramUserDto.id);
   }
 
-  @UseGuards(AuthGuard)
+  @UseGuards(AuthGuard, RolesGuard)
   @UserRoles(Role.Admin, Role.Client)
   @UsePipes(new ValidationPipe(/* { stopAtFirstError: true } */))
   @Patch(':id')
@@ -95,7 +94,7 @@ export class UsersController {
     return this.usersService.update(paramUserDto.id, updateUserDto);
   }
 
-  @UseGuards(AuthGuard)
+  @UseGuards(AuthGuard, RolesGuard)
   @UserRoles(Role.Admin)
   @Delete(':id')
   @UsePipes(new ValidationPipe(/* { stopAtFirstError: true } */))
