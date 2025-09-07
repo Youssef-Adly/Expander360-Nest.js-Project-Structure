@@ -1,4 +1,3 @@
-
 import { Logger } from '@nestjs/common';
 import { DataSource } from 'typeorm';
 // import * as dotenv from 'dotenv';
@@ -48,14 +47,6 @@ export const databaseProviders = [
             __dirname + '/../**/*.entity{.ts,.js}',
           ],
           synchronize: true,
-          ssl: true
-            ? {
-              rejectUnauthorized: false, // required for Aiven/MySQL managed clouds
-              ca: process.env.DB_SSL_CA?.replace(/\\n/g, '\n'),
-              // key: process.env.DB_SSL_KEY?.replace(/\\n/g, '\n'),
-              // cert: process.env.DB_SSL_CERT?.replace(/\\n/g, '\n'),
-            }
-            : undefined,
         });
 
         await dataSource.initialize();
