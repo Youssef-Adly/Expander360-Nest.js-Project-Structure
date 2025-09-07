@@ -80,6 +80,46 @@ npm run start:dev
 npm run start:prod
 ```
 
+## 🗄️ Database Migrations
+
+The project uses a structured migration system to manage database schema changes.
+
+### Migration Files
+
+Migrations are located in `src/database/migrations/` and are executed in numerical order:
+
+| File                            | Description                                                 |
+| ------------------------------- | ----------------------------------------------------------- |
+| `001-create-users-table.sql`    | Creates users table with company info and admin flags       |
+| `002-create-projects-table.sql` | Creates projects table with service requirements and status |
+| `003-create-vendors-table.sql`  | Creates vendors table with service offerings and SLA info   |
+| `004-create-matches-table.sql`  | Creates matches table linking projects to vendors           |
+| `005-seed-sample-data.sql`      | Inserts sample data for testing and development             |
+
+### Running Migrations
+
+```bash
+# Run all migrations in order
+npm run migration:run
+
+# Or using ts-node directly
+npx ts-node scripts/run-migrations.ts
+```
+
+### Migration Features
+
+- **Idempotent**: Safe to run multiple times
+- **Error Handling**: Gracefully handles existing tables and constraints
+- **Detailed Logging**: Shows progress and status for each migration
+- **Sample Data**: Includes realistic test data for immediate development
+
+### Adding New Migrations
+
+1. Create a new file with the next number: `006-your-migration-name.sql`
+2. Use standard SQL with appropriate `CREATE TABLE IF NOT EXISTS` statements
+3. Add indexes and foreign key constraints as needed
+4. Test the migration on a copy of your database first
+
 ## 📊 Database Schema
 
 ### MySQL Schema (Relational Data)
@@ -351,7 +391,13 @@ src/
 ├── common/
 │   └── enums/          # Shared enumerations
 ├── database/
-│   └── migrations/     # SQL migration files
+│   └── migrations/     # SQL migration files (001-005)
+│       ├── 001-create-users-table.sql
+│       ├── 002-create-projects-table.sql
+│       ├── 003-create-vendors-table.sql
+│       ├── 004-create-matches-table.sql
+│       ├── 005-seed-sample-data.sql
+│       └── README.md   # Migration documentation
 ├── matches/            # Project-vendor matching logic
 ├── MySQL/              # MySQL database configuration
 ├── notifications/      # Email and notification services
@@ -366,7 +412,7 @@ scripts/
 ├── seed-all.ts         # Complete database seeding
 ├── seed-database.ts    # MySQL seeding
 ├── seed-mongodb.ts     # MongoDB seeding
-└── run-migrations.ts   # Migration runner
+└── run-migrations.ts   # Enhanced migration runner
 ```
 
 ### Code Quality

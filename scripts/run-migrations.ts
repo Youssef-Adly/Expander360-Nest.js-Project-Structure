@@ -22,40 +22,71 @@ async function runMigrations() {
     await dataSource.initialize();
     console.log('✅ Database connection established');
 
-    // Read and execute the migration file
-    const migrationPath = path.join(__dirname, '../src/database/migrations/create-projects-vendors-schema.sql');
+    // Get all migration files in order
+    const migrationsDir = path.join(__dirname, '../src/database/migrations');
 
-    if (!fs.existsSync(migrationPath)) {
-      throw new Error(`Migration file not found: ${migrationPath}`);
+    if (!fs.existsSync(migrationsDir)) {
+      throw new Error(`Migrations directory not found: ${migrationsDir}`);
     }
 
-    const migrationSql = fs.readFileSync(migrationPath, 'utf8');
+    const migrationFiles = fs.readdirSync(migrationsDir)
+      .filter(file => file.endsWith('.sql'))
+      .sort(); // Files are named with numeric prefixes, so sorting works
 
-    // Split the SQL into individual statements
-    const statements = migrationSql
-      .split(';')
-      .map(stmt => stmt.trim())
-      .filter(stmt => stmt.length > 0 && !stmt.startsWith('--'));
+    console.log(`📁 Found ${migrationFiles.length} migration files:`);
+    migrationFiles.forEach(file => console.log(`   - ${file}`));
 
-    console.log(`📝 Executing ${statements.length} SQL statements...`);
+    // Execute each migration file
+    for (const migrationFile of migrationFiles) {
+      console.log(`\n🔄 Running migration: ${migrationFile}`);
 
-    for (const statement of statements) {
-      if (statement.trim()) {
-        try {
-          await dataSource.query(statement);
-          console.log('✓ Executed statement successfully');
-        } catch (error) {
-          // Ignore "table already exists" errors
-          if (error.message.includes('already exists')) {
-            console.log('ℹ️ Table already exists, skipping...');
-          } else {
-            throw error;
+      const migrationPath = path.join(migrationsDir, migrationFile);
+      const migrationSql = fs.readFileSync(migrationPath, 'utf8');
+
+      // Split the SQL into individual statements
+      const statements = migrationSql
+        .split(';')
+        .map(stmt => {
+          // Remove comments from each statement but keep the SQL
+          const cleanStmt = stmt
+            .replace(/--.*$/gm, '') // Remove line comments
+            .replace(/\/\*[\s\S]*?\*\//g, '') // Remove block comments
+            .trim();
+          return cleanStmt;
+        })
+        .filter(stmt => stmt.length > 0);
+
+      console.log(`   📝 Executing ${statements.length} SQL statements...`);
+      if (statements.length === 0) {
+        console.log(`   ⚠️ No statements found in ${migrationFile}`);
+      }
+
+      for (const statement of statements) {
+        if (statement.trim()) {
+          try {
+            await dataSource.query(statement);
+            console.log('   ✓ Statement executed successfully');
+          } catch (error) {
+            // Ignore common non-critical errors when running migrations multiple times
+            if (error.message.includes('already exists') ||
+              error.message.includes('Duplicate key name') ||
+              error.message.includes('Duplicate entry') ||
+              error.message.includes('Duplicate column name') ||
+              error.message.includes('Multiple primary key defined') ||
+              error.message.includes('Key column') && error.message.includes("doesn't exist in table")) {
+              console.log('   ℹ️ Resource already exists or constraint issue, skipping...');
+            } else {
+              console.error(`   ❌ Error in ${migrationFile}:`, error.message);
+              throw error;
+            }
           }
         }
       }
+
+      console.log(`   ✅ Migration ${migrationFile} completed!`);
     }
 
-    console.log('🎉 Migrations completed successfully!');
+    console.log('\n🎉 All migrations completed successfully!');
 
     await dataSource.destroy();
   } catch (error) {
