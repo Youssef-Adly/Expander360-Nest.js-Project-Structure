@@ -15,7 +15,7 @@ A comprehensive NestJS-based platform that intelligently matches projects with v
 
 ```bash
 # Clone the repository
-git clone <repository-url>
+git clone https://github.com/Youssef-Adly/Expander360-Nest.js-Project-Structure.git
 cd expander360
 
 # Install dependencies
