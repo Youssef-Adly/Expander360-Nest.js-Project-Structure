@@ -1,0 +1,886 @@
+{
+	"info": {
+		"_postman_id": "e472caff-4de6-47ad-84e1-50d88ecba2ce",
+		"name": "Server",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "32129687",
+		"_collection_link": "https://www.postman.com/spacecraft-astronaut-51362182/workspace/expanders360/collection/32129687-e472caff-4de6-47ad-84e1-50d88ecba2ce?action=share&source=collection_link&creator=32129687"
+	},
+	"item": [
+		{
+			"name": "User Controller",
+			"item": [
+				{
+					"name": "GET Requests",
+					"item": [
+						{
+							"name": "Get All Users",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseURL}}/users",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"users"
+									],
+									"query": [
+										{
+											"key": "limit",
+											"value": "1",
+											"disabled": true
+										},
+										{
+											"key": "page",
+											"value": "1",
+											"disabled": true
+										},
+										{
+											"key": "isAdmin",
+											"value": "false",
+											"description": "to find clients",
+											"disabled": true
+										},
+										{
+											"key": "isAdmin",
+											"value": "true",
+											"description": "to find admins",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get User By Id",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseURL}}/users/1",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"users",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Test User token",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseURL}}/users/token/test",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"users",
+										"token",
+										"test"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "POST Requests",
+					"item": [
+						{
+							"name": "Create User",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 201\", function () {\r",
+											"    pm.expect(pm.response.code).to.equal(201);\r",
+											"});\r",
+											"\r",
+											"// Set token in credentials variable\r",
+											"const response = pm.response.json();\r",
+											"if(response.token){\r",
+											"    pm.environment.set(\"token\", response.token);\r",
+											"}\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"company_name\": \"client\",\r\n    \"contact_email\": \"client123123@mail.com\",\r\n    \"password\": \"123123123A@a\"\r\n    // ,\"IsAdmin\": true // defaults to false\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseURL}}/users",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"users"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Register User as Client",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"company_name\": \"newClient\",\r\n    \"contact_email\": \"Client4@mail.com\",\r\n    \"password\": \"Admin@123\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseURL}}/users/register",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"users",
+										"register"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Login",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 201\", function () {\r",
+											"    pm.expect(pm.response.code).to.equal(201);\r",
+											"});\r",
+											"\r",
+											"// Set token in credentials variable\r",
+											"const response = pm.response.json();\r",
+											"if(response.token){\r",
+											"    pm.environment.set(\"token\", response.token);\r",
+											"}\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"contact_email\": \"admin@expander360.com\",\r\n    \"password\": \"password123\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseURL}}/users/login",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"users",
+										"login"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "PATCH Requests",
+					"item": [
+						{
+							"name": "Update User",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    // \"company_name\": \"client\",\r\n    // \"contact_email\": \"client@mail.com\",\r\n    \"password\": \"Admin@123\"\r\n    // \"IsAdmin\": false // defaults to false\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseURL}}/users/1",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"users",
+										"1"
+									],
+									"query": [
+										{
+											"key": "limit",
+											"value": "1",
+											"disabled": true
+										},
+										{
+											"key": "page",
+											"value": "1",
+											"disabled": true
+										},
+										{
+											"key": "isAdmin",
+											"value": "false",
+											"description": "to find clients",
+											"disabled": true
+										},
+										{
+											"key": "isAdmin",
+											"value": "true",
+											"description": "to find admins",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "DELETE Requests",
+					"item": [
+						{
+							"name": "Delete User",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseURL}}/users/7",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"users",
+										"7"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Projects Controller",
+			"item": [
+				{
+					"name": "Get Requests",
+					"item": [
+						{
+							"name": "Get All Projects",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"contact_email\": \"Client2@mail.com\",\r\n    \"password\": \"Admin@123\"\r\n}"
+								},
+								"url": {
+									"raw": "{{baseURL}}/projects",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"projects"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get One Project",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseURL}}/projects/1",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"projects",
+										"1"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "POST Requests",
+					"item": [
+						{
+							"name": "Create Project",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"user_id\": 2,\r\n    \"country\": \"Egypt\",\r\n    \"services_needed\": [\r\n        \"web_development\",\r\n        \"ui_ux_design\"\r\n    ],\r\n    \"budget\": 1000,\r\n    \"status\": \"active\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseURL}}/projects",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"projects"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "PATCH Requests",
+					"item": [
+						{
+							"name": "Update Project",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"country\": \"ERU\",\r\n    \"services_needed\": [\r\n        \"web_development\",\r\n        \"ui_ux_design\"\r\n    ],\r\n    \"budget\": 20000,\r\n    \"status\": \"paused\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseURL}}/projects/2",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"projects",
+										"2"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Delete Requests",
+					"item": [
+						{
+							"name": "Delete Project",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"user_id\": 2,\r\n    \"country\": \"Egypt\",\r\n    \"services_needed\": [\r\n        \"web_development\",\r\n        \"ui_ux_design\"\r\n    ],\r\n    \"budget\": 1000,\r\n    \"status\": \"active\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseURL}}/projects/3",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"projects",
+										"3"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Vendors Controller",
+			"item": [
+				{
+					"name": "Get Requests",
+					"item": [
+						{
+							"name": "Get All Vendors",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "{{baseURL}}/vendors",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"vendors"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get One Vendor",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseURL}}/vendors/1",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"vendors",
+										"1"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "POST Requests",
+					"item": [
+						{
+							"name": "Create Vendor",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"B-Tech\",\r\n    \"countries_supported\": [\r\n        \"Egypt\",\r\n        \"Dubai\"\r\n    ],\r\n    \"services_offered\": [\r\n        \"web_development\",\r\n        \"ui_ux_design\"\r\n    ],\r\n    \"rating\": 5,\r\n    \"response_sla_hours\": 168\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseURL}}/vendors",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"vendors"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "PATCH Requests",
+					"item": [
+						{
+							"name": "Update Vendor",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"Noon\",\r\n    // \"countries_supported\": [\r\n    //     \"Egypt\",\r\n    //     \"Dubai\"\r\n    // ],\r\n    // \"services_offered\": [\r\n    //     \"web_development\",\r\n    //     \"ui_ux_design\"\r\n    // ],\r\n    // \"rating\": 5//,\r\n    \"response_sla_hours\": 100\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseURL}}/vendors/2",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"vendors",
+										"2"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Delete Requests",
+					"item": [
+						{
+							"name": "Delete Vendor",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"user_id\": 2,\r\n    \"country\": \"Egypt\",\r\n    \"services_needed\": [\r\n        \"web_development\",\r\n        \"ui_ux_design\"\r\n    ],\r\n    \"budget\": 1000,\r\n    \"status\": \"active\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseURL}}/vendors/6",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"vendors",
+										"6"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Matches Controller",
+			"item": [
+				{
+					"name": "Get All Matches",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/matches",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"matches"
+							],
+							"query": [
+								{
+									"key": "project_id",
+									"value": "4",
+									"disabled": true
+								},
+								{
+									"key": "vendor_id",
+									"value": "5",
+									"disabled": true
+								},
+								{
+									"key": "top",
+									"value": "5",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Project-Vendor Matching",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{baseURL}}/projects/3/matches/rebuild",
+							"host": [
+								"{{baseURL}}"
+							],
+							"path": [
+								"projects",
+								"3",
+								"matches",
+								"rebuild"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Reports",
+			"item": [
+				{
+					"name": "GET Requests",
+					"item": [
+						{
+							"name": "Get All Reports",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseURL}}/reports/search",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"reports",
+										"search"
+									],
+									"query": [
+										{
+											"key": "limit",
+											"value": "1",
+											"disabled": true
+										},
+										{
+											"key": "page",
+											"value": "1",
+											"disabled": true
+										},
+										{
+											"key": "projectId",
+											"value": "555",
+											"disabled": true
+										},
+										{
+											"key": "title",
+											"value": "123",
+											"disabled": true
+										},
+										{
+											"key": "tags",
+											"value": "monthly,progress",
+											"disabled": true
+										},
+										{
+											"key": "content",
+											"value": "lorem",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get One Report",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseURL}}/reports/68bc8a3dc9d37291f7fcc5c7",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"reports",
+										"68bc8a3dc9d37291f7fcc5c7"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "POST Requests",
+					"item": [
+						{
+							"name": "Create Report",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"projectId\": 4,\r\n    \"title\": \"Expenses\",\r\n    \"content\": \"lorem ibsum\",\r\n    \"tags\": \"monthly, progress\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseURL}}/reports",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"reports"
+									],
+									"query": [
+										{
+											"key": "limit",
+											"value": "1",
+											"disabled": true
+										},
+										{
+											"key": "page",
+											"value": "1",
+											"disabled": true
+										},
+										{
+											"key": "isAdmin",
+											"value": "false",
+											"description": "to find clients",
+											"disabled": true
+										},
+										{
+											"key": "isAdmin",
+											"value": "true",
+											"description": "to find admins",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Analytics",
+			"item": [
+				{
+					"name": "GET Requests",
+					"item": [
+						{
+							"name": "Get All Analytics",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseURL}}/analytics/top-vendors",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"analytics",
+										"top-vendors"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Vendor Performance",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseURL}}/analytics/vendor/5/performance",
+									"host": [
+										"{{baseURL}}"
+									],
+									"path": [
+										"analytics",
+										"vendor",
+										"5",
+										"performance"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{token}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseURL",
+			"value": ""
+		}
+	]
+}

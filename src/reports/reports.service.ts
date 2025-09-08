@@ -33,7 +33,7 @@ export class ReportsService {
       const savedReport = await report.save();
       return {
         message: 'Report created successfully',
-        report: savedReport,
+        report: JSON.parse(JSON.stringify(savedReport)),
       };
     } catch (error) {
       throw new BadRequestException('Failed to create report: ' + error.message);
@@ -42,10 +42,10 @@ export class ReportsService {
 
   async findAll() {
     try {
-      const reports = await this.reportModel.find().exec();
+      const reports = await this.reportModel.find().lean().exec();
       return {
         message: 'Reports fetched successfully',
-        reports,
+        reports: JSON.parse(JSON.stringify(reports)),
         count: reports.length,
       };
     } catch (error) {
@@ -59,14 +59,14 @@ export class ReportsService {
         throw new BadRequestException('Invalid report ID format');
       }
 
-      const report = await this.reportModel.findById(id).exec();
+      const report = await this.reportModel.findById(id).lean().exec();
       if (!report) {
         throw new NotFoundException(`Report with ID ${id} not found`);
       }
 
       return {
         message: 'Report fetched successfully',
-        report,
+        report: JSON.parse(JSON.stringify(report)),
       };
     } catch (error) {
       if (error instanceof NotFoundException || error instanceof BadRequestException) {
@@ -113,13 +113,14 @@ export class ReportsService {
         .limit(limit)
         .skip(skip)
         .sort({ createdAt: -1 })
+        .lean()
         .exec();
 
       const total = await this.reportModel.countDocuments(filter).exec();
 
       return {
         message: 'Reports fetched successfully',
-        reports,
+        reports: JSON.parse(JSON.stringify(reports)),
         count: reports.length,
         total,
       };
@@ -141,11 +142,12 @@ export class ReportsService {
 
       const updatedReport = await this.reportModel
         .findByIdAndUpdate(id, updateReportDto, { new: true })
+        .lean()
         .exec();
 
       return {
         message: 'Report updated successfully',
-        report: updatedReport,
+        report: JSON.parse(JSON.stringify(updatedReport)),
       };
     } catch (error) {
       if (error instanceof NotFoundException || error instanceof BadRequestException) {
@@ -161,7 +163,7 @@ export class ReportsService {
         throw new BadRequestException('Invalid report ID format');
       }
 
-      const report = await this.reportModel.findById(id).exec();
+      const report = await this.reportModel.findById(id).lean().exec();
       if (!report) {
         throw new NotFoundException(`Report with ID ${id} not found`);
       }
@@ -169,7 +171,7 @@ export class ReportsService {
       await this.reportModel.findByIdAndDelete(id).exec();
       return {
         message: 'Report deleted successfully',
-        report,
+        report: JSON.parse(JSON.stringify(report)),
       };
     } catch (error) {
       if (error instanceof NotFoundException || error instanceof BadRequestException) {

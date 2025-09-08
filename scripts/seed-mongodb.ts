@@ -62,6 +62,7 @@ async function clearExistingData(db: Db) {
 
   await db.collection('analytics').deleteMany({});
   await db.collection('reports').deleteMany({});
+  await db.collection('analytics_reports').deleteMany({});
 
   console.log('✅ Existing MongoDB data cleared');
 }
@@ -164,8 +165,9 @@ async function seedReports(db: Db) {
 
   const reportsCollection = db.collection('reports');
 
+  // First, seed the analytics reports (existing structure for analytics dashboard)
   const now = new Date();
-  const reportsData: ReportData[] = [
+  const analyticsReportsData: ReportData[] = [
     {
       report_id: `report_${Date.now()}_1`,
       title: 'Project Performance Summary - Q4 2024',
@@ -298,8 +300,65 @@ async function seedReports(db: Db) {
     }
   ];
 
-  await reportsCollection.insertMany(reportsData);
-  console.log(`✅ Created ${reportsData.length} reports`);
+  // Create a new collection for analytics reports to avoid confusion
+  const analyticsReportsCollection = db.collection('analytics_reports');
+  await analyticsReportsCollection.insertMany(analyticsReportsData);
+  console.log(`✅ Created ${analyticsReportsData.length} analytics reports`);
+
+  // Now seed the main reports using the endpoint structure (projectId, title, content, tags)
+  const mainReportsData = [
+    {
+      projectId: 4,
+      title: "Expenses",
+      content: "lorem ipsum",
+      tags: "monthly, progress"
+    },
+    {
+      projectId: 1,
+      title: "Project Status Update",
+      content: "This report contains the latest updates on the web development project progress. We have completed the initial design phase and are moving into development.",
+      tags: "status, development, milestone"
+    },
+    {
+      projectId: 2,
+      title: "Budget Analysis",
+      content: "Detailed analysis of the current budget allocation and spending patterns for the mobile app development project. All expenses are within the allocated budget.",
+      tags: "budget, financial, analysis"
+    },
+    {
+      projectId: 3,
+      title: "Performance Metrics",
+      content: "Monthly performance metrics showing system performance improvements and optimization results for the data analytics platform.",
+      tags: "performance, metrics, optimization"
+    },
+    {
+      projectId: 5,
+      title: "Security Assessment",
+      content: "Comprehensive security assessment report covering vulnerabilities, threats, and recommended security measures for the blockchain project.",
+      tags: "security, assessment, blockchain"
+    },
+    {
+      projectId: 1,
+      title: "Team Productivity Report",
+      content: "Analysis of team productivity and resource allocation efficiency during the current development sprint.",
+      tags: "productivity, team, sprint"
+    },
+    {
+      projectId: 2,
+      title: "Quality Assurance Summary",
+      content: "Summary of quality assurance activities, test results, and bug reports for the current development cycle.",
+      tags: "qa, testing, quality"
+    },
+    {
+      projectId: 6,
+      title: "Marketing Campaign Results",
+      content: "Results and analysis of the latest digital marketing campaign including engagement metrics and conversion rates.",
+      tags: "marketing, campaign, results"
+    }
+  ];
+
+  await reportsCollection.insertMany(mainReportsData);
+  console.log(`✅ Created ${mainReportsData.length} main reports`);
 }
 
 // Run the seeding if this file is executed directly

@@ -390,7 +390,11 @@ src/
 ├── analytics/          # Analytics and reporting
 ├── common/
 │   └── enums/          # Shared enumerations
+│   └── enums/          # Shared enumerations
 ├── database/
+|   ├── database.module.ts # MySQL database Module
+|   ├── database.providers.ts # MySQL database configuration
+|   ├── README-Projects-Vendors-API.md # Match API documentation
 │   └── migrations/     # SQL migration files (001-005)
 │       ├── 001-create-users-table.sql
 │       ├── 002-create-projects-table.sql
@@ -399,7 +403,6 @@ src/
 │       ├── 005-seed-sample-data.sql
 │       └── README.md   # Migration documentation
 ├── matches/            # Project-vendor matching logic
-├── MySQL/              # MySQL database configuration
 ├── notifications/      # Email and notification services
 ├── projects/           # Project management
 ├── reports/            # Report generation
